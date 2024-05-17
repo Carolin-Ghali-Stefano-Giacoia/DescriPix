@@ -1,10 +1,3 @@
-//
-//  UploadImage.swift
-//  DescriPix
-//
-//  Created by Stefano on 05/03/24.
-//
-
 import Foundation
 import UIKit
 
@@ -12,10 +5,8 @@ func uploadImage(selectedImage: UIImage, text: String, completion: @escaping (St
     print("Entro in uploadImage...")
 
     let imageData = selectedImage.jpegData(compressionQuality: 0.5)
-    //let url = URL(string: "http://127.0.0.1:8000/predict")!
-    //let url = URL(string: "http://mact08-06.local:5000/predict")!
-    //Da aggiornare se necessario
-    let url = URL(string: "http://172.28.93.148:8000/predict")!
+    // Aggiornato con il nuovo URL del server
+    let url = URL(string: "https://develop.ewlab.di.unimi.it/descripix/predict")!
 
     // Costruisci la richiesta HTTP
     var request = URLRequest(url: url)
@@ -40,7 +31,7 @@ func uploadImage(selectedImage: UIImage, text: String, completion: @escaping (St
         }
         
         do {
-            if let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+            if let jsonResponse = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any],
                let generatedText = jsonResponse["generated_text"] as? String {
                 completion(generatedText)
             }
@@ -48,4 +39,5 @@ func uploadImage(selectedImage: UIImage, text: String, completion: @escaping (St
             print("Errore durante la deserializzazione del JSON", error)
         }
     }.resume()
+
 }
